@@ -1,0 +1,11 @@
+nohup python train.py --data /home/hjj/Desktop/dataset/dataset_head/data.yaml --cfg cfg/training/yolov7-tiny.yaml --epochs 200 \
+    --cache-images --batch-size 32 --hyp data/hyp.scratch.tiny.yaml --name ori_yolov7_tiny > logs/yolov7_tiny_ori.out 2>&1 & tail -f logs/yolov7_tiny_ori.out
+
+nohup python train.py --data /home/hjj/Desktop/dataset/dataset_head/data.yaml --cfg cfg/training/yolov7-tiny-coupling.yaml --epochs 200 \
+    --cache-images --batch-size 32 --hyp data/hyp.scratch.tiny.yaml --name coupling_yolov7_tiny > logs/yolov7_tiny_coupling.out 2>&1 & tail -f logs/yolov7_tiny_coupling.out
+
+nohup python train.py --data /home/hjj/Desktop/dataset/dataset_head/data.yaml --cfg cfg/training/yolov7-tiny-custom.yaml --epochs 200 \
+    --cache-images --batch-size 32 --hyp data/hyp.scratch.tiny.yaml --name custom_yolov7_tiny > logs/yolov7_tiny_custom.out 2>&1 & tail -f logs/yolov7_tiny_custom.out
+
+nohup python train.py --data /home/hjj/Desktop/dataset/dataset_head/data.yaml --cfg cfg/training/yolov7-tiny-tscode.yaml --epochs 200 \
+    --cache-images --batch-size 32 --hyp data/hyp.scratch.tiny.yaml --name tscode_yolov7_tiny > logs/tscode_yolov7_tiny.out 2>&1 & tail -f logs/tscode_yolov7_tiny.out
