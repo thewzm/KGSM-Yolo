@@ -7,14 +7,17 @@ import numpy as np
 def cas_iou(box, cluster):
     x = np.minimum(cluster[:, 0], box[0])
     y = np.minimum(cluster[:, 1], box[1])
-
+    x1 = np.maximum(cluster[:, 0], box[0])
+    y1 = np.maximum(cluster[:, 1], box[1])
     intersection = x * y
+    c = x1*y1
     area1 = box[0] * box[1]
-
+    
     area2 = cluster[:, 0] * cluster[:, 1]
-    iou = intersection / (area1 + area2 - intersection)
+    u = area1 + area2 - intersection
+    giou = (intersection / u)-(c-u)/c
 
-    return iou
+    return giou
 
 
 def avg_iou(box, cluster):
@@ -22,11 +25,7 @@ def avg_iou(box, cluster):
 
 
 def bboxesOverRation(bboxesA, bboxesB):
-    """
-    功能等同于matlab的函数bboxesOverRation
-    bboxesA：M*4 array,形如[x,y,w,h]排布
-    bboxesB: N*4 array,形如[x,y,w,h]排布
-    """
+
     bboxesA = np.array(bboxesA.astype('float'))
     bboxesB = np.array(bboxesB.astype('float'))
     M = bboxesA.shape[0]
@@ -87,40 +86,7 @@ def load_data(path):
 
 
 def estimateAnchorBoxes(trainingData, numAnchors=9):
-    '''
-    功能：kmeans++算法估计anchor，类似于matlab函数estimateAnchorBoxes,当trainingData
-    数据量较大时候，自写的kmeans迭代循环效率较低，matlab的estimateAnchorBoxes得出
-    anchors较快，但meanIOU较低，然后乘以实际box的ratio即可。此算法由于优化是局部，易陷入局部最优解，结果不一致属正常
-    cuixingxing150@gmail.com
-    Example:
-        import scipy.io as scipo
-        data = scipo.loadmat(r'D:\Matlab_files\trainingData.mat')
-        trainingData = data['temp']
-
-        meanIoUList = []
-        for numAnchor in np.arange(1,16):
-            anchorBoxes,meanIoU = estimateAnchorBoxes(trainingData,numAnchors=numAnchor)
-            meanIoUList.append(meanIoU)
-        plt.plot(np.arange(1,16),meanIoUList,'ro-')
-        plt.ylabel("Mean IoU")
-        plt.xlabel("Number of Anchors")
-        plt.title("Number of Anchors vs. Mean IoU")
-
-    Parameters
-    ----------
-    trainingData : numpy 类型
-        形如[x,y,w,h]排布，M*4大小二维矩阵
-    numAnchors : int, optional
-        估计的anchors数量. The default is 9.
-
-    Returns
-    -------
-    anchorBoxes : numpy类型
-        形如[w,h]排布，N*2大小矩阵.
-    meanIoU : scalar 标量
-        DESCRIPTION.
-
-    '''
+    
 
     numsObver = trainingData.shape[0]
     xyArray = np.zeros((numsObver, 2))
